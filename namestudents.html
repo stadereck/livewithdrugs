@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista de Asistencia - Grupo A</title>
+    <style>
+        :root {
+            --primary-color: #2563eb;
+            --bg-color: #f8fafc;
+            --card-bg: #ffffff;
+            --text-color: #1e293b;
+            --text-secondary: #64748b;
+            --accent-color: #0f172a;
+            --transition-speed: 0.4s;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            display: flex;
+            justify-content: center;
+            padding: 40px 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 800px;
+            background: var(--card-bg);
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+            border: 1px solid #e2e8f0;
+        }
+
+        header {
+            background: var(--primary-color);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        header h1 {
+            font-size: 1.8rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            margin-bottom: 5px;
+        }
+
+        header p {
+            font-size: 0.9rem;
+            opacity: 0.9;
+            font-weight: 300;
+        }
+
+        .list-container {
+            padding: 10px 0;
+        }
+
+        .student-row {
+            display: flex;
+            align-items: center;
+            padding: 16px 30px;
+            border-bottom: 1px solid #f1f5f9;
+            transition: background-color 0.2s ease;
+        }
+
+        .student-row:last-child {
+            border-bottom: none;
+        }
+
+        .student-row:hover {
+            background-color: #f8fafc;
+        }
+
+        .student-number {
+            font-family: 'Courier New', monospace;
+            font-weight: 700;
+            color: var(--primary-color);
+            width: 60px;
+            font-size: 1.1rem;
+        }
+
+        .student-name {
+            flex-grow: 1;
+            font-size: 1.05rem;
+            color: var(--accent-color);
+            position: relative;
+            min-height: 24px;
+            display: flex;
+            align-items: center;
+        }
+
+        /* Estilos para los nombres ocultos/especiales */
+        .hidden-content {
+            filter: blur(8px);
+            user-select: none;
+            opacity: 0.5;
+            transition: all var(--transition-speed) cubic-bezier(0.4, 0, 0.2, 1);
+            background: #e2e8f0;
+            color: transparent;
+            border-radius: 4px;
+            padding: 0 8px;
+        }
+
+        .revealed {
+            filter: blur(0);
+            opacity: 1;
+            background: transparent;
+            color: var(--text-color);
+            font-weight: 600; /* Resaltar los revelados */
+        }
+
+        .reveal-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 8px;
+            margin-left: 15px;
+            color: var(--text-secondary);
+            border-radius: 50%;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .reveal-btn:hover {
+            background-color: #e0e7ff;
+            color: var(--primary-color);
+        }
+
+        .reveal-btn svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        .empty-slot {
+            color: var(--text-secondary);
+            font-style: italic;
+            font-size: 0.9rem;
+        }
+
+        /* Animación para la revelación */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>Lista de Alumnos</h1>
+        <p>Ciclo Escolar 2025 - 2026</p>
+    </header>
+    
+    <div class="list-container" id="roster">
+        </div>
+</div>
+
+<script>
+    // Datos transcritos de la imagen
+    // "special": true activa el modo oculto
+    // "revealName": es el nombre que aparecerá al desbloquear (si es diferente al de la lista)
+    const students = [
+        { id: '001', name: 'Sofia' },
+        { id: '002', name: 'Ricardo' },
+        { id: '003', name: 'Mariel' },
+        { id: '004', name: 'Renata' },
+        { id: '005', name: 'David' },
+        { id: '006', name: 'Yoshirly - Caro' },
+        { id: '007', name: '', isEmpty: true }, // Vacío
+        { id: '008', name: 'Casillero' },
+        { id: '009', name: 'Alondra' },
+        { id: '010', name: 'Cedillo - Hanna' },
+        { id: '011', name: 'Cervantes Christopher' },
+        { id: '012', name: 'Comesaña - Derecek' },
+        { id: '013', name: 'Diaz Victoria' },
+        { id: '014', name: 'Garcia Rocio' },
+        { id: '015', name: 'Flores Gonzalez Malla' },
+        { id: '016', name: 'IAN', special: true, revealName: 'IAN' }, // Especial
+        { id: '017', name: 'Godiño' },
+        { id: '018', name: 'Gillen' },
+        { id: '019', name: 'Guzman Romero' },
+        { id: '020', name: 'Hernandez' },
+        { id: '021', name: 'Jimenez Montoya' },
+        { id: '022', name: 'Leon Leonardo' },
+        { id: '023', name: 'Leira' },
+        { id: '024', name: 'Luna' },
+        { id: '025', name: 'Martinez', special: true, revealName: 'Emiliano Martínez' }, // Especial: Emiliano
+        { id: '026', name: 'Mendez Leon', special: true, revealName: 'Méndez León' }, // Especial
+        { id: '027', name: 'Mendia' },
+        { id: '028', name: 'Montes Lara' },
+        { id: '029', name: 'Najera' },
+        { id: '030', name: 'Nezahual' },
+        { id: '031', name: 'Perez' },
+        { id: '032', name: 'Perez Rios' },
+        { id: '033', name: 'Popoca', special: true, revealName: 'Maximiliano Popoca Molina' }, // Especial: Maximiliano
+        { id: '034', name: 'Ramiro' },
+        { id: '035', name: 'Rebollar', special: true, revealName: 'Dereck Rebollar' }, // Especial: TU (Dereck)
+        { id: '036', name: 'Rivera' },
+        { id: '037', name: 'Rivera G.' },
+        { id: '038', name: 'Rivera' },
+        { id: '039', name: 'Rodriges' },
+        { id: '040', name: 'Rojas' },
+        { id: '041', name: 'Rosendo' },
+        { id: '042', name: 'Ruiz' },
+        { id: '043', name: 'Ruvalcaba' },
+        { id: '044', name: 'Salazar' },
+        { id: '045', name: 'Sanches' },
+        { id: '046', name: 'Santesteban' },
+        { id: '047', name: 'Torres' },
+        { id: '048', name: 'Villa Fuerte' }
+    ];
+
+    const rosterContainer = document.getElementById('roster');
+
+    // Iconos SVG
+    const eyeOpenIcon = `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" /><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /></svg>`;
+    
+    const eyeClosedIcon = `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3.98 8.223A10.477 10.477 0 001.934 12C3.226 16.338 7.244 19.5 12 19.5c.993 0 1.953-.138 2.863-.395M6.228 6.228A10.45 10.45 0 0112 4.5c4.756 0 8.773 3.162 10.065 7.498a10.523 10.523 0 01-4.293 5.774M6.228 6.228L3 3m3.228 3.228l3.65 3.65m7.894 7.894L21 21m-3.228-3.228l-3.65-3.65m0 0a3 3 0 10-4.243-4.243m4.242 4.242L9.88 9.88" /></svg>`;
+
+    students.forEach(student => {
+        const row = document.createElement('div');
+        row.className = 'student-row';
+
+        // Lógica para renderizar el nombre
+        let nameHTML = '';
+        let buttonHTML = '';
+
+        if (student.isEmpty) {
+            nameHTML = `<span class="empty-slot">-- Vacío --</span>`;
+        } else if (student.special) {
+            // Nombre oculto
+            nameHTML = `<span id="name-${student.id}" class="hidden-content" data-full="${student.revealName}">${student.name}</span>`;
+            buttonHTML = `<button class="reveal-btn" onclick="toggleReveal('${student.id}')" title="Revelar identidad">${eyeOpenIcon}</button>`;
+        } else {
+            // Nombre normal
+            nameHTML = `<span>${student.name}</span>`;
+        }
+
+        row.innerHTML = `
+            <div class="student-number">${student.id}</div>
+            <div class="student-name">
+                ${nameHTML}
+            </div>
+            ${buttonHTML}
+        `;
+
+        rosterContainer.appendChild(row);
+    });
+
+    // Función para la animación de revelar
+    function toggleReveal(id) {
+        const nameElement = document.getElementById(`name-${id}`);
+        const btnElement = nameElement.parentElement.nextElementSibling; // El botón está después del div .student-name
+        
+        // Si está oculto (tiene la clase hidden-content)
+        if (nameElement.classList.contains('hidden-content')) {
+            nameElement.classList.remove('hidden-content');
+            nameElement.classList.add('revealed');
+            
+            // Cambiar texto al nombre completo revelado
+            nameElement.textContent = nameElement.getAttribute('data-full');
+            
+            // Cambiar icono a cerrado (opcional, o quitar botón)
+            btnElement.innerHTML = eyeClosedIcon;
+            
+        } else {
+            // Volver a ocultar (opcional, si quieres que sea reversible)
+            nameElement.classList.remove('revealed');
+            nameElement.classList.add('hidden-content');
+            
+            // Regresar al nombre "público" (podemos buscarlo en el array original o dejar el completo borroso)
+            // Para simplificar, simplemente lo borramos visualmente de nuevo.
+            btnElement.innerHTML = eyeOpenIcon;
+        }
+    }
+</script>
+
+</body>
+</html>
