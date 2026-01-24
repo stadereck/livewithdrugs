@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>¿Por qué Iker?</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap');
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #000;
+            overflow: hidden;
+            user-select: none;
+        }
+
+        /* --- Animación del Borde Giratorio Multicolor --- */
+        @keyframes spin-border {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .btn-glow {
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            /* Gradiente cónico denso para simular "más de 100 colores" */
+            background: conic-gradient(
+                #ff0000, #ff1a00, #ff3300, #ff4d00, #ff6600, #ff8000, #ff9900, #ffb300, #ffcc00, #ffe600,
+                #ffff00, #e6ff00, #ccff00, #b3ff00, #99ff00, #80ff00, #66ff00, #4dff00, #33ff00, #1aff00,
+                #00ff00, #00ff1a, #00ff33, #00ff4d, #00ff66, #00ff80, #00ff99, #00ffb3, #00ffcc, #00ffe6,
+                #00ffff, #00e6ff, #00ccff, #00b3ff, #0099ff, #0080ff, #0066ff, #004dff, #0033ff, #001aff,
+                #0000ff, #1a00ff, #3300ff, #4d00ff, #6600ff, #8000ff, #9900ff, #b300ff, #cc00ff, #e600ff,
+                #ff00ff, #ff00e6, #ff00cc, #ff00b3, #ff0099, #ff0080, #ff0066, #ff004d, #ff0033, #ff001a,
+                #ff0000, #ff1a00, #ff3300, #ff4d00, #ff6600, #ff8000, #ff9900, #ffb300, #ffcc00, #ffe600,
+                #ffff00, #e6ff00, #ccff00, #b3ff00, #99ff00, #80ff00, #66ff00, #4dff00, #33ff00, #1aff00,
+                #00ff00, #00ff1a, #00ff33, #00ff4d, #00ff66, #00ff80, #00ff99, #00ffb3, #00ffcc, #00ffe6,
+                #00ffff, #00e6ff, #00ccff, #00b3ff, #0099ff, #0080ff, #0066ff, #004dff, #0033ff, #001aff,
+                #0000ff, #1a00ff, #3300ff, #4d00ff, #6600ff, #8000ff, #9900ff, #b300ff, #cc00ff, #e600ff,
+                #ff00ff, #ff00e6, #ff00cc, #ff00b3, #ff0099, #ff0080, #ff0066, #ff004d, #ff0033, #ff001a, #ff0000
+            );
+            animation: spin-border 1.5s linear infinite;
+            z-index: 0;
+        }
+
+        /* --- Animación de Puntos (Ola) --- */
+        @keyframes wave {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-6px); }
+        }
+        
+        .loading-dot {
+            display: inline-block;
+        }
+        
+        .loading-dot:nth-child(1) { animation: wave 1s infinite ease-in-out 0s; }
+        .loading-dot:nth-child(2) { animation: wave 1s infinite ease-in-out 0.2s; }
+        .loading-dot:nth-child(3) { animation: wave 1s infinite ease-in-out 0.4s; }
+
+        /* --- Animación de Caída del Texto --- */
+        @keyframes shake-and-fall {
+            0% { transform: translate(0, 0) rotate(0deg); opacity: 1; }
+            10% { transform: translate(-5px, 0) rotate(-2deg); }
+            20% { transform: translate(5px, 0) rotate(2deg); }
+            30% { transform: translate(-5px, 0) rotate(-2deg); }
+            40% { transform: translate(5px, 0) rotate(2deg); }
+            50% { transform: translate(0, 0) rotate(0deg); opacity: 1; }
+            100% { transform: translate(0, 100vh) rotate(10deg); opacity: 0; }
+        }
+
+        .text-collapse {
+            animation: shake-and-fall 1.5s forwards ease-in;
+        }
+
+        /* --- Escena del Choque --- */
+        #chaos-scene {
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.5s ease;
+        }
+
+        #chaos-scene.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .tower {
+            background: linear-gradient(to bottom, #555, #111);
+            border: 1px solid #777;
+            position: absolute;
+            bottom: 0;
+            z-index: 10;
+        }
+
+        .window-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 2px;
+            padding: 4px;
+            opacity: 0.6;
+        }
+        .win {
+            background-color: #88ccff;
+            height: 3px;
+            width: 100%;
+        }
+
+        /* Avión */
+        #plane {
+            position: absolute;
+            font-size: 5rem;
+            z-index: 20;
+            top: 20%;
+            right: -150px; 
+            transition: transform 0.1s;
+        }
+
+        /* Animación: Giro a la Izquierda y Choque */
+        @keyframes crash-path-left {
+            0% { 
+                right: -150px; 
+                top: 10%;
+                transform: rotate(0deg);
+            }
+            30% {
+                /* Gira hacia la izquierda (sube nariz) */
+                transform: rotate(15deg);
+                top: 15%;
+                right: 20%;
+            }
+            50% {
+                /* Inicia picada girando bruscamente */
+                transform: rotate(-30deg);
+            }
+            100% { 
+                right: 50%; 
+                top: 60%;
+                transform: translate(50%, -50%) rotate(-90deg); /* Nariz abajo */
+            }
+        }
+
+        .animate-plane {
+            animation: crash-path-left 0.9s forwards ease-in;
+        }
+
+        /* Fuego */
+        .fire-overlay {
+            background: radial-gradient(circle, rgba(255,100,0,0.9) 0%, rgba(200,50,0,0.5) 70%, transparent 100%);
+            mix-blend-mode: screen;
+            animation: pulse-fire 0.15s infinite alternate;
+        }
+
+        @keyframes pulse-fire {
+            0% { opacity: 0.8; transform: scale(1); }
+            100% { opacity: 1; transform: scale(1.05); }
+        }
+
+        .fire-particle {
+            position: absolute;
+            font-size: 4rem;
+            animation: rise 1s forwards;
+            opacity: 0;
+        }
+
+        @keyframes rise {
+            0% { transform: translateY(0) scale(1) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(-300px) scale(2.5) rotate(180deg); opacity: 0; }
+        }
+
+    </style>
+</head>
+<body class="h-screen w-screen flex flex-col items-center justify-center relative bg-black overflow-hidden">
+
+    <!-- Capa de Contenido Principal -->
+    <div id="main-content" class="z-50 text-center px-4 relative transition-transform duration-500">
+        <h1 id="main-text" class="text-white text-3xl md:text-6xl font-black mb-16 tracking-tighter leading-tight select-none">
+            ¿POR QUÉ A TANTOS<br>
+            <span class="text-red-600 drop-shadow-lg">DEL SALÓN</span> NO LES<br>
+            AGRADA <span class="text-blue-600 drop-shadow-lg">IKER</span>?
+        </h1>
+
+        <!-- Botón Interactivo -->
+        <div class="relative group inline-block">
+            <div class="absolute inset-[-5px] rounded-xl overflow-hidden">
+                <div class="btn-glow"></div>
+            </div>
+            
+            <button id="trigger-btn" class="relative bg-black text-white font-bold py-5 px-12 rounded-xl text-2xl uppercase tracking-widest border border-transparent z-10 transition-transform duration-100 active:scale-95 group-hover:bg-gray-900 shadow-2xl">
+                Próximamente
+                <span class="inline-flex ml-2">
+                    <span class="loading-dot text-3xl">.</span>
+                    <span class="loading-dot text-3xl">.</span>
+                    <span class="loading-dot text-3xl">.</span>
+                </span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Escena Oculta -->
+    <div id="chaos-scene" class="fixed inset-0 w-full h-full bg-black z-40 flex items-end justify-center overflow-hidden">
+        
+        <div id="fire-screen" class="absolute inset-0 fire-overlay hidden z-50"></div>
+
+        <div id="plane">✈️</div>
+
+        <!-- 2 Torres -->
+        <div class="relative w-full h-full max-w-lg mx-auto flex justify-center items-end gap-16 pb-0">
+            <!-- Torre 1 -->
+            <div class="tower w-24 h-64 md:h-80 md:w-32 rounded-t-lg">
+                <div class="window-grid h-full" id="grid1"></div>
+            </div>
+            <!-- Torre 2 -->
+            <div class="tower w-24 h-64 md:h-80 md:w-32 rounded-t-lg">
+                <div class="window-grid h-full" id="grid2"></div>
+            </div>
+        </div>
+
+        <div id="particles" class="absolute inset-0 pointer-events-none z-50"></div>
+    </div>
+
+    <script>
+        const btn = document.getElementById('trigger-btn');
+        const scene = document.getElementById('chaos-scene');
+        const plane = document.getElementById('plane');
+        const fireScreen = document.getElementById('fire-screen');
+        const particlesContainer = document.getElementById('particles');
+        const mainText = document.getElementById('main-text');
+
+        let crashTimeout;
+        let particleInterval;
+
+        const createWindows = (id) => {
+            const grid = document.getElementById(id);
+            // Más ventanas para que se vea más alto
+            for(let i=0; i<80; i++) {
+                const win = document.createElement('div');
+                win.className = 'win';
+                grid.appendChild(win);
+            }
+        };
+        createWindows('grid1');
+        createWindows('grid2');
+
+        function spawnFire() {
+            const fire = document.createElement('div');
+            fire.textContent = ['🔥', '💥', '🧨', '☁️'][Math.floor(Math.random() * 4)];
+            fire.className = 'fire-particle';
+            const randomX = 50 + (Math.random() * 40 - 20); 
+            const randomY = 60 + (Math.random() * 20 - 10);
+            fire.style.left = `${randomX}%`;
+            fire.style.top = `${randomY}%`;
+            
+            particlesContainer.appendChild(fire);
+
+            setTimeout(() => {
+                fire.remove();
+            }, 900);
+        }
+
+        const startAnimation = (e) => {
+            if(e.cancelable) e.preventDefault();
+            
+            scene.classList.add('active');
+            
+            // Animación de texto cayendo
+            mainText.classList.remove('text-collapse');
+            void mainText.offsetWidth; 
+            mainText.classList.add('text-collapse');
+
+            // Reiniciar avión
+            plane.classList.remove('animate-plane');
+            void plane.offsetWidth;
+            plane.classList.add('animate-plane');
+
+            // Programar choque
+            clearTimeout(crashTimeout);
+            crashTimeout = setTimeout(() => {
+                fireScreen.classList.remove('hidden');
+                if (navigator.vibrate) navigator.vibrate([100, 50, 100, 50, 200]);
+                
+                particleInterval = setInterval(spawnFire, 50);
+            }, 700); // Ajustado para sincronizar con la nueva animación
+        };
+
+        const stopAnimation = () => {
+            scene.classList.remove('active');
+            fireScreen.classList.add('hidden');
+            plane.classList.remove('animate-plane');
+            
+            // Resetear texto (opcional: quitar la clase para que reaparezca instantáneamente o con fade)
+            mainText.classList.remove('text-collapse');
+            mainText.style.opacity = '1';
+            mainText.style.transform = 'none';
+
+            clearTimeout(crashTimeout);
+            clearInterval(particleInterval);
+            particlesContainer.innerHTML = ''; 
+        };
+
+        // Listeners
+        btn.addEventListener('mouseenter', startAnimation);
+        btn.addEventListener('mouseleave', stopAnimation);
+
+        btn.addEventListener('touchstart', startAnimation, {passive: false});
+        btn.addEventListener('touchend', stopAnimation);
+        btn.addEventListener('touchcancel', stopAnimation);
+
+    </script>
+</body>
+</html>
